@@ -1,0 +1,26 @@
+@import helper._
+@(videoId: String)
+
+<html lang="en">
+<head>
+      <title>YTLytics</title>
+      <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+      <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.webp")">
+</head>
+<body  onload="render_tags('@videoId')">
+<div class="list_2" style="margin-top:100px">
+      <p class="paraTag" >
+            <b>Title:</b><a target="_blank" id="title"></a><br><br>
+            <b>Channel:</b><a target="_blank" id="channel"></a><br><br>
+            <p class="paraTag" id="description"></p><br><br>
+      </p><br><br>
+      <img alt="thumbnail" id="thumbnail"  width="500px" height="300px" class="thumbnail1">
+</div>
+<div id="tagsResponse">
+      tagsResponse
+</div>
+<br><br>
+<div id="tagsResults"></div>
+<script src="@routes.Assets.versioned("javascripts/tags.js")" type="text/javascript"></script>
+</body>
+</html>
