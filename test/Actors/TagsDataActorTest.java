@@ -84,8 +84,8 @@ public class TagsDataActorTest {
 
         when(youtubeMock.videos()).thenReturn(videosMock);
         when(videosMock.list(Collections.singletonList("snippet,contentDetails,statistics"))).thenReturn(videosListMock);
-        when(videosListMock.setId(Collections.singletonList("Video123"))).thenReturn(videosListMock);
-        when(videosListMock.setKey("API_KEY")).thenReturn(videosListMock);
+        when(videosListMock.setId(Collections.singletonList("0BjlBnfHcHM"))).thenReturn(videosListMock);
+        when(videosListMock.setKey("AIzaSyCRJ3kJeKPXbVQKeAP6HKzsIWxnGfVEkPI")).thenReturn(videosListMock);
         when(videosListMock.execute()).thenReturn(videoListResponseMock);
 
         // Act and Assert
@@ -114,14 +114,84 @@ public class TagsDataActorTest {
 
         when(youtubeMock.videos()).thenReturn(videosMock);
         when(videosMock.list(Collections.singletonList("snippet,contentDetails,statistics"))).thenReturn(videosListMock);
-        when(videosListMock.setId(Collections.singletonList("Video123"))).thenReturn(videosListMock);
-        when(videosListMock.setKey("API_KEY")).thenReturn(videosListMock);
-        when(videosListMock.execute()).thenThrow(new IOException("API error"));
+
+        when(videosListMock.setId(Collections.singletonList(""))).thenThrow(new NullPointerException("ID error - VideoID not present"));
+        when(videosListMock.setId(Collections.singletonList("video"))).thenThrow(new IllegalArgumentException("ID error - VideoID too short"));
+        when(videosListMock.setId(Collections.singletonList("video123456789"))).thenThrow(new IllegalArgumentException("ID error - VideoID too long"));
+        when(videosListMock.setId(Collections.singletonList("video@@**&&"))).thenThrow(new IllegalArgumentException("ID error - VideoID too long"));
+
+        when(videosListMock.setKey("")).thenThrow(new NullPointerException("API error - API key not present"));
+        when(videosListMock.setKey("API_KEY")).thenThrow(new IllegalArgumentException("API error - API key too short"));
+        when(videosListMock.setKey("AIzaSyCRJ3kJeKPXbVQKeAP6HKzsIWxnGfVEabcdbdefgh")).thenThrow(new IllegalArgumentException("API error - API key too long"));
+        when(videosListMock.setKey("AIzaSyCRJ3kJeKPXbVQKeAP6HKzsIWxnGfVE-@I")).thenThrow(new IllegalArgumentException("API error - illegal characters present in API"));
 
         // Act and Assert
         new TestKit(system) {{
             ActorRef tagsDataActor = system.actorOf(TagsDataActor.props());
-            FetchVideoData fetchVideoData = new FetchVideoData(youtubeMock, "Video123", "API_KEY");
+            FetchVideoData fetchVideoData = new FetchVideoData(youtubeMock, "Video123", "");
+
+            try {
+                tagsDataActor.tell(fetchVideoData, getRef());
+                expectNoMessage(); // The actor should handle the error internally without sending a message
+            } catch (Exception e) {
+                Assert.fail("Actor threw an unexpected exception: " + e.getMessage());
+            }
+
+            fetchVideoData = new FetchVideoData(youtubeMock, "Video123", "API_KEY");
+
+            try {
+                tagsDataActor.tell(fetchVideoData, getRef());
+                expectNoMessage(); // The actor should handle the error internally without sending a message
+            } catch (Exception e) {
+                Assert.fail("Actor threw an unexpected exception: " + e.getMessage());
+            }
+
+            fetchVideoData = new FetchVideoData(youtubeMock, "Video123", "AIzaSyCRJ3kJeKPXbVQKeAP6HKzsIWxnGfVEabcdbdefgh");
+
+            try {
+                tagsDataActor.tell(fetchVideoData, getRef());
+                expectNoMessage(); // The actor should handle the error internally without sending a message
+            } catch (Exception e) {
+                Assert.fail("Actor threw an unexpected exception: " + e.getMessage());
+            }
+
+            fetchVideoData = new FetchVideoData(youtubeMock, "Video123", "AIzaSyCRJ3kJeKPXbVQKeAP6HKzsIWxnGfVE-@I");
+
+            try {
+                tagsDataActor.tell(fetchVideoData, getRef());
+                expectNoMessage(); // The actor should handle the error internally without sending a message
+            } catch (Exception e) {
+                Assert.fail("Actor threw an unexpected exception: " + e.getMessage());
+            }
+
+            fetchVideoData = new FetchVideoData(youtubeMock, "", "AIzaSyCRJ3kJeKPXbVQKeAP6HKzsIWxnGfVEkPI");
+
+            try {
+                tagsDataActor.tell(fetchVideoData, getRef());
+                expectNoMessage(); // The actor should handle the error internally without sending a message
+            } catch (Exception e) {
+                Assert.fail("Actor threw an unexpected exception: " + e.getMessage());
+            }
+
+            fetchVideoData = new FetchVideoData(youtubeMock, "video", "AIzaSyCRJ3kJeKPXbVQKeAP6HKzsIWxnGfVEkPI");
+
+            try {
+                tagsDataActor.tell(fetchVideoData, getRef());
+                expectNoMessage(); // The actor should handle the error internally without sending a message
+            } catch (Exception e) {
+                Assert.fail("Actor threw an unexpected exception: " + e.getMessage());
+            }
+
+            fetchVideoData = new FetchVideoData(youtubeMock, "video123456789", "AIzaSyCRJ3kJeKPXbVQKeAP6HKzsIWxnGfVEkPI");
+
+            try {
+                tagsDataActor.tell(fetchVideoData, getRef());
+                expectNoMessage(); // The actor should handle the error internally without sending a message
+            } catch (Exception e) {
+                Assert.fail("Actor threw an unexpected exception: " + e.getMessage());
+            }
+
+            fetchVideoData = new FetchVideoData(youtubeMock, "video@@**&&", "AIzaSyCRJ3kJeKPXbVQKeAP6HKzsIWxnGfVEkPI");
 
             try {
                 tagsDataActor.tell(fetchVideoData, getRef());

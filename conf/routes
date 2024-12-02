@@ -6,10 +6,10 @@ GET     /                           controllers.HomeController.index()
 
 GET    /tags/:videoId                controllers.HomeController.tagIndex(videoId:String)
 GET     /channel/:channelId          controllers.HomeController.channelProfile(channelId:String)
-GET     /wordStats/:searchNumber     controllers.HomeController.wordStats(searchNumber:String)
 
 GET    /tagsWS                           controllers.WebSocketController.tagsSocket()
 GET    /searchWS                         controllers.WebSocketController.searchSocket()
+GET    /channelWS                        controllers.WebSocketController.ChannelSocket()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

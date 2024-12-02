@@ -7,20 +7,9 @@
  * @since 01-11-2024
  * */
 package controllers;
-
-import Models.SearchData;
-import Models.YoutubeService;
-import Models.ChannelData;
-
 import play.mvc.*;
-
-import java.io.IOException;
-
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CompletableFuture;
-import java.security.GeneralSecurityException;
-
-import com.google.api.services.youtube.YouTube;
 
 /**
  * This is the one and only main controller for the project that handles the HTTP requests and renders
@@ -29,11 +18,6 @@ import com.google.api.services.youtube.YouTube;
  * to the application's home page.
  */
 public class HomeController extends Controller {
-
-    //The api key
-    private static final String API_KEY = "AIzaSyAW0T6vizZ9wEgix9jH8WzVIaw_TVe1mak";
-    private static YouTube youtube;
-    private static SearchData videos;
 
     /**
      * @author Sujith Manikandan
@@ -70,43 +54,7 @@ public class HomeController extends Controller {
      */
     public CompletionStage<Result> channelProfile(String channelId) {
         return CompletableFuture.supplyAsync(() -> {
-            try {
-                ChannelData channelData = new ChannelData(YoutubeService.getService(), channelId, API_KEY);
-
-                return ok(views.html.channel.render(
-                        channelData.getChannelTitle(),
-                        channelData.getDescription(),
-                        channelData.getSubscriberCount(),
-                        channelData.getThumbnailUrl(),
-                        channelData.getRecentVideos() // List of recent videos
-                ));
-            } catch (IOException | GeneralSecurityException e) {
-                e.printStackTrace();
-                return internalServerError("Error fetching channel data");
-            }
+                return ok(views.html.channel.render(channelId));
         });
     }
-
-
-
-
-    /**
-     * @author Tharun Balaji
-     * @param searchNumber the search query number
-     * @return the rendering of the word stats web page*/
-    public CompletionStage<Result> wordStats(String searchNumber) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                // Render the channel profile page with channel details and recent videos
-                return ok(views.html.stats.render(
-                    videos.getWordStats()
-                ));
-            } catch (Exception e) {
-                e.printStackTrace();
-                return internalServerError("Error fetching channel data");
-            }
-        });
-    }
-
-
 }

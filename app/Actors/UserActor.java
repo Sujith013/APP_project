@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserActor extends AbstractActor {
-    public ArrayList<String> queries = new ArrayList<>();
+    public static ArrayList<String> queries = new ArrayList<>();
     public static class FetchSearchData {
         public final String query;
         public final YouTube youtube;
@@ -57,9 +57,11 @@ public class UserActor extends AbstractActor {
 
             String query = URLEncoder.encode(request.query, StandardCharsets.UTF_8);
 
+            queries.add(query);
+
             YouTube.Search.List search = request.youtube.search().list(Collections.singletonList("snippet"));
             search.setQ(query);
-            search.setMaxResults(50L);
+            search.setMaxResults(20L);
             search.setKey(request.apiKey);
 
             // Execute the search request and get the response
