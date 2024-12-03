@@ -1,19 +1,17 @@
-@import helper._
-@(wordStats: LinkedHashMap[String, Long])
+
 
 <html lang="en">
 <head>
   <title>Word Stats</title>
   <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
 </head>
-<body>
+<body onload="wordStats()">
+
 <div class="channel-profile" style="text-align: center; margin-top: 20px;">
   <h1>Word Stats</h1>
 
-    @for((word, count) <- wordStats) {
-        <strong>@word:</strong> @count <br>
-    }
 
 </div>
+<script src="@routes.Assets.versioned("javascripts/wordStats.js")" type="text/javascript"></script>
 </body>
 </html>

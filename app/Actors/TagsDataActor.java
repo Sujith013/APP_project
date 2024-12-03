@@ -19,6 +19,11 @@ public class TagsDataActor extends AbstractActor {
         public final YouTube youtube;
         public final String apiKey;
 
+        /**
+         * @author Sujith Manikandan
+         * @param youtube the youtube object
+         * @param videoId the video Id
+         * @param apiKey*/
         public FetchVideoData(YouTube youtube, String videoId, String apiKey) {
             this.videoId = videoId;
             this.youtube = youtube;
@@ -37,6 +42,9 @@ public class TagsDataActor extends AbstractActor {
                 .build();
     }
 
+    /**
+     * The main function for the computation
+     * @param request the request which is the videoData object*/
     private void handleFetchVideoData(FetchVideoData request) {
             try {
                 YouTube.Videos.List videoList = request.youtube.videos().list(Collections.singletonList("snippet,contentDetails,statistics"));
@@ -68,6 +76,14 @@ public class TagsDataActor extends AbstractActor {
         public final String thumbnail;
         public final String tags;
 
+        /**
+         * @author Sujith Manikandan
+         * @param videoId the id of the video
+         * @param videoTitle the title of the video
+         * @param channelTitle the title of the channel
+         * @param description the description of the video
+         * @param  thumbnail the thumbnail url
+         * @param tags the tags list response*/
         public TagsData(String videoId, String videoTitle, String channelTitle, String channelId, String description, String thumbnail, String tags) {
             this.videoId = videoId;
             this.videoTitle = videoTitle;
@@ -78,6 +94,9 @@ public class TagsDataActor extends AbstractActor {
             this.tags = tags;
         }
 
+        /**
+         * @author sujith manikandan
+         * @returns the complete information about the tags as a string*/
         public String getTagsInformation()
         {
             try {

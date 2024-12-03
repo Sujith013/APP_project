@@ -51,9 +51,11 @@ const socket = new WebSocket(webSocketURL);
                            };
 
                            socket.onmessage = (event) => {
-                                    console.log(tagId);
-                                    console.log(event.data);
-                                    printOutput(JSON.parse(event.data),tagId);
+                                   const responseData = JSON.parse(event.data);
+                                   const sentiment = responseData.senti; // Sentiment value
+                                   const data = responseData.data;
+                                    console.log(event.data)// Data for the videos
+                                   printOutput(data, sentiment, tagId);
                            }
 
                            socket.onerror = function(error) {
@@ -82,12 +84,12 @@ const socket = new WebSocket(webSocketURL);
 }
 
 
-function printOutput(data,searchParams)
+function printOutput(data,sentiment,searchParams)
 {
     const sR = document.getElementById('tagsResults');
-    console.log(searchParams);
+
     var newHead = document.createElement("p");
-    var headVal = "<b><u>Search Terms</u>:</b>"+searchParams;
+    var headVal = "<b><u>Search Terms</u>:</b>"+searchParams+"  "+sentiment;
     newHead.innerHTML = headVal;
     newHead.classList.add("list_1");
 
@@ -96,11 +98,16 @@ function printOutput(data,searchParams)
     for(var i=0;i<sR.children.length;i++)
     {
        if(sR.children[i].tagName=="P")
-           if(sR.children[i].innerHTML.split("</b>")[1]==searchParams)
+       {
+           console.log(sR.children[i].innerHTML.split("</b>")[1]);
+           console.log(sR.children[i].innerHTML.split("</b>")[1].slice(0,-5));
+
+           if(sR.children[i].innerHTML.split("</b>")[1].slice(0,-5)==searchParams)
             {
                f = i;
                break;
             }
+       }
     }
 
     if(f==-1)
@@ -124,6 +131,27 @@ function printOutput(data,searchParams)
         sR.insertBefore(newHead, sR.firstChild); // Insert before the first child
     else
         sR.appendChild(newHead);
+
+    var count = 0;
+    var index = 0;
+
+    for(var i=0;i<sR.children.length;i++)
+    {
+      if(sR.children[i].tagName=="P")
+        count += 1;
+
+      if(count==11)
+      {
+         index=i;
+         break;
+      }
+    }
+
+    if(count==11)
+    {
+    while(sR.children.length!=index)
+        sR.removeChild(sR.children[sR.children.length-1])
+    }
     }
     else
     {

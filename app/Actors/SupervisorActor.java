@@ -207,4 +207,30 @@ public class SupervisorActor {
             return CompletableFuture.completedFuture("Error fetching YouTube data");
         }
     }
+
+    /*public static Source<String, NotUsed> getWordStatsSource(ActorSystem actorSystem, RequestHeader request, ActorRef wordStatsActor, Duration TIMEOUT) {
+        return Source.<String>actorRef(10, org.apache.pekko.stream.OverflowStrategy.fail())
+                .mapMaterializedValue(ref -> {
+                    actorSystem.scheduler().scheduleAtFixedRate(
+                            Duration.ofSeconds(0),
+                            Duration.ofSeconds(60),
+                            () -> {
+                                String[] videoDescriptions = request.queryString().get("videoDescriptions");
+                                if (videoDescriptions != null && videoDescriptions.length > 0) {
+                                    wordStatsIndex(videoDescriptions[0], wordStatsActor, TIMEOUT).thenAccept(response -> {
+                                        ref.tell(response, ActorRef.noSender());
+                                    }).exceptionally(ex -> {
+                                        ref.tell("{\"error\": \"Error fetching data: " + ex.getMessage() + "\"}", ActorRef.noSender());
+                                        return null;
+                                    });
+                                } else {
+                                    ref.tell("{\"error\": \"Missing video descriptions.\"}", ActorRef.noSender());
+                                }
+                            },
+                            actorSystem.dispatcher()
+                    );
+                    return NotUsed.getInstance();
+                });
+    }*/
+
 }
