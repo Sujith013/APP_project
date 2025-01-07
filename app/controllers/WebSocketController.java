@@ -31,7 +31,7 @@ import static Actors.SupervisorActor.getChannelSource;
 //import static Actors.SupervisorActor.getWordStatsSource;
 
 public class WebSocketController extends Controller {
-    private static final String API_KEY = "AIzaSyAtdsdZUu9Yayn4XBp-aA7-HiGdNnuGJVU";
+    private static final String API_KEY = "your_api_key";
 
     private final ActorSystem actorSystem;
     private final Materializer materializer;
